@@ -3,14 +3,12 @@ package com.atguigu.gmall.pms.service.impl;
 import com.atguigu.gmall.pms.entity.*;
 import com.atguigu.gmall.pms.feign.GmallSmsClient;
 import com.atguigu.gmall.pms.mapper.SkuMapper;
-import com.atguigu.gmall.pms.mapper.SpuDescMapper;
-import com.atguigu.gmall.pms.service.SkuAttrValueService;
-import com.atguigu.gmall.pms.service.SkuImagesService;
-import com.atguigu.gmall.pms.service.SpuAttrValueService;
+import com.atguigu.gmall.pms.service.*;
 import com.atguigu.gmall.pms.vo.SkuVo;
 import com.atguigu.gmall.pms.vo.SpuAttrValueVo;
 import com.atguigu.gmall.pms.vo.SpuVo;
 import com.atguigu.gmall.sms.vo.SkuSaleVo;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +22,8 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 
 import com.atguigu.gmall.pms.mapper.SpuMapper;
-import com.atguigu.gmall.pms.service.SpuService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +33,7 @@ import java.util.stream.Collectors;
 public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements SpuService {
 
     @Autowired
-    private SpuDescMapper descMapper;
+    private SpuDescService spuDescService;
     @Autowired
     private SpuAttrValueService baseService;
     @Autowired
@@ -75,33 +72,33 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
         return new PageResultVo(this.page(pageParamVo.getPage(), wrapper));
     }
 
+
     @Override
+    @GlobalTransactional
     public void bigSave(SpuVo spuVo) {
         //1.保存spu相关的
         //1.1保存spu基本信息
-        spuVo.setPublishStatus(1);//默认已上架
-        spuVo.setCreateTime(new Date());//创建时间
-        spuVo.setUpdateTime(spuVo.getCreateTime());
-        this.save(spuVo);
-        Long spuId = spuVo.getId();//获取新增后的spuId
+        Long spuId = saveSpu(spuVo);
         //1.2保存spu的描述信息
-        SpuDescEntity spuInfoDescEntity = new SpuDescEntity();
-        //注意pms_spu_desc表的主键是spu_id,需要在实体类中配置该主键不是自增主键
-        spuInfoDescEntity.setSpuId(spuId);
-        // 把商品的图片描述，保存到spu详情中，图片地址以逗号进行分割
-        spuInfoDescEntity.setDecript(StringUtils.join(spuVo.getSpuImages(), ","));
-        this.descMapper.insert(spuInfoDescEntity);
+        this.spuDescService.saveSpuDesc(spuVo, spuId);
+
+
+//            FileInputStream xxxx = new FileInputStream("xxxx");
+
         //1.3保存spu的规格信息
-        List<SpuAttrValueVo> baseAttrs = spuVo.getBaseAttrs();
-        if (!CollectionUtils.isEmpty(baseAttrs)) {
-            List<SpuAttrValueEntity> SpuAttrValueEntities = baseAttrs.stream().map(spuAttrValueVo -> {
-                spuAttrValueVo.setSpuId(spuId);
-                spuAttrValueVo.setSort(0);
-                return spuAttrValueVo;
-            }).collect(Collectors.toList());
-            this.baseService.saveBatch(SpuAttrValueEntities);
-        }
+        saveBaseAttr(spuVo, spuId);
         //2.保存sku基本信息
+        saveSku(spuVo, spuId);
+        //int i = 1/0;
+
+    }
+
+    /**
+     * 保存sku相关信息及营销信息
+     *
+     * @param spuInfoVO
+     */
+    public void saveSku(SpuVo spuVo, Long spuId) {
         List<SkuVo> skuVos = spuVo.getSkus();
         if (CollectionUtils.isEmpty(skuVos)) {
             return;
@@ -139,7 +136,7 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
             }
             //2.3保存sku的规格参数(销售属性)
             List<SkuAttrValueEntity> saleAttrs = skuVo.getSaleAttrs();
-            saleAttrs.forEach(saleAttr ->{
+            saleAttrs.forEach(saleAttr -> {
                 // 设置属性名，需要根据id查询AttrEntity
                 saleAttr.setSort(0);
                 saleAttr.setSkuId(skuId);
@@ -147,11 +144,43 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
             this.skuAttrValueService.saveBatch(saleAttrs);
             // 3. 保存营销相关信息，需要远程调用gmall-sms
             SkuSaleVo skuSaleVo = new SkuSaleVo();
-            BeanUtils.copyProperties(skuVo,skuSaleVo);
+            BeanUtils.copyProperties(skuVo, skuSaleVo);
             skuSaleVo.setSkuId(skuId);
             this.gmallSmsClient.saveSkuSaleInfo(skuSaleVo);
         });
+    }
 
+    /**
+     * 保存spu基本属性信息
+     *
+     * @param spuInfoVO
+     */
+    public void saveBaseAttr(SpuVo spuVo, Long spuId) {
+        List<SpuAttrValueVo> baseAttrs = spuVo.getBaseAttrs();
+        if (!CollectionUtils.isEmpty(baseAttrs)) {
+            List<SpuAttrValueEntity> SpuAttrValueEntities = baseAttrs.stream().map(spuAttrValueVo -> {
+                spuAttrValueVo.setSpuId(spuId);
+                spuAttrValueVo.setSort(0);
+                return spuAttrValueVo;
+            }).collect(Collectors.toList());
+            this.baseService.saveBatch(SpuAttrValueEntities);
+        }
+    }
+
+
+
+    /**
+     * 保存spu基本信息
+     *
+     * @param spuInfoVO
+     */
+    @Transactional
+    public Long saveSpu(SpuVo spuVo) {
+        spuVo.setPublishStatus(1);//默认已上架
+        spuVo.setCreateTime(new Date());//创建时间
+        spuVo.setUpdateTime(spuVo.getCreateTime());
+        this.save(spuVo);
+        return spuVo.getId();
     }
 
 

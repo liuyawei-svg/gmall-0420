@@ -15,6 +15,19 @@
 
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-seata</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-all</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.atguigu</groupId>
             <artifactId>gmall-sms-interface</artifactId>
