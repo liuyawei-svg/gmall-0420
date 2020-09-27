@@ -46,9 +46,9 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuEntity> implements
     private GmallSmsClient gmallSmsClient;
 
     @Override
-    public PageResultVo queryPage(PageParamVo paramVo) {
+    public PageResultVo queryPage(PageParamVo pageParamVo) {
         IPage<SpuEntity> page = this.page(
-                paramVo.getPage(),
+                pageParamVo.getPage(),
                 new QueryWrapper<SpuEntity>()
         );
 

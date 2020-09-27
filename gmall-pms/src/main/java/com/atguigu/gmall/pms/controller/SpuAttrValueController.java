@@ -35,6 +35,16 @@ public class SpuAttrValueController {
     private SpuAttrValueService spuAttrValueService;
 
     /**
+     *搜索模块根据spuId查询检索属性及值
+     *
+     * */
+    @GetMapping("spu/{cid}/{spuId}")
+    public ResponseVo<List<SpuAttrValueEntity>> querySearchAttrValueByaSpuId(@PathVariable("cid")Long cid,@PathVariable("spuId")Long spuId){
+
+        List<SpuAttrValueEntity> attrValueEntities = spuAttrValueService.querySearchAttrValueByaSpuId(cid,spuId);
+        return ResponseVo.ok(attrValueEntities);
+    }
+    /**
      * 列表
      */
     @GetMapping

@@ -20,6 +20,8 @@ import com.atguigu.gmall.common.bean.PageResultVo;
 import com.atguigu.gmall.common.bean.ResponseVo;
 import com.atguigu.gmall.common.bean.PageParamVo;
 
+import javax.xml.crypto.dsig.keyinfo.PGPData;
+
 /**
  * spu信息
  *
@@ -42,6 +44,17 @@ public class SpuController {
 
         PageResultVo pageResultVo = this.spuService.querySpuInfo(pageParamVo, categoryId);
         return ResponseVo.ok(pageResultVo);
+    }
+
+    /*
+    * 搜索模块查询分页数据
+    * */
+    @PostMapping("page")
+    public ResponseVo<List<SpuEntity>> querySpusByaPage(@RequestBody PageParamVo pageParamVo){
+
+        PageResultVo page = spuService.queryPage(pageParamVo);
+        List<SpuEntity> list = (List<SpuEntity>)page.getList();
+        return ResponseVo.ok(list);
     }
 
     /**
