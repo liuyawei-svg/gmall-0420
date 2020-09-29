@@ -7,7 +7,7 @@ import com.atguigu.gmall.search.feign.GmallPmsClient;
 import com.atguigu.gmall.search.feign.GmallWmsClient;
 
 import com.atguigu.gmall.search.pojo.Goods;
-import com.atguigu.gmall.search.pojo.SearchAttrValue;
+import com.atguigu.gmall.search.pojo.SearchAttrValueVo;
 import com.atguigu.gmall.search.repository.GoodsRepository;
 import com.atguigu.gmall.wms.entity.WareSkuEntity;
 import org.junit.jupiter.api.Test;
@@ -69,10 +69,10 @@ class GmallSearchApplicationTests {
                                         spuEntity.getId());
 
                         List<SkuAttrValueEntity> attrValueEntities = attrValueResp.getData();
-                        List<SearchAttrValue> searchAttrValues = new ArrayList<>();
+                        List<SearchAttrValueVo> searchAttrValues = new ArrayList<>();
                         if (!CollectionUtils.isEmpty(attrValueEntities)) {
                             searchAttrValues = attrValueEntities.stream().map(spuAttrValueEntity -> {
-                                SearchAttrValue searchAttrValue = new SearchAttrValue();
+                                SearchAttrValueVo searchAttrValue = new SearchAttrValueVo();
                                 searchAttrValue.setAttrId(spuAttrValueEntity.getAttrId());
                                 searchAttrValue.setAttrName(spuAttrValueEntity.getAttrName());
                                 searchAttrValue.setAttrValue(spuAttrValueEntity.getAttrValue());
@@ -84,10 +84,10 @@ class GmallSearchApplicationTests {
                                 querySearchSkuAttrValuesByCidAndSkuId(spuEntity.getCategoryId(),
                                         spuEntity.getId());
                         List<SkuAttrValueEntity> skuAttrValueEntities = skuAttrValueResp.getData();
-                        List<SearchAttrValue> searchSkuAttrValues = new ArrayList<>();
+                        List<SearchAttrValueVo> searchSkuAttrValues = new ArrayList<>();
                         if (!CollectionUtils.isEmpty(skuAttrValueEntities)) {
                             searchSkuAttrValues = skuAttrValueEntities.stream().map(skuAttrValueEntity -> {
-                                SearchAttrValue searchAttrValue = new SearchAttrValue();
+                                SearchAttrValueVo searchAttrValue = new SearchAttrValueVo();
                                 searchAttrValue.setAttrId(skuAttrValueEntity.getAttrId());
                                 searchAttrValue.setAttrName(skuAttrValueEntity.getAttrName());
                                 searchAttrValue.setAttrValue(skuAttrValueEntity.getAttrValue());

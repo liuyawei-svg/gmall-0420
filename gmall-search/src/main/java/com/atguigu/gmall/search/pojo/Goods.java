@@ -42,7 +42,7 @@ public class Goods {
 
     // 规格参数所需字段
     @Field(type = FieldType.Nested)
-    private List<SearchAttrValue> searchAttrs;
+    private List<SearchAttrValueVo> searchAttrs;
 
     // 排序所需字段
     @Field(type = FieldType.Long)
@@ -50,6 +50,6 @@ public class Goods {
     @Field(type = FieldType.Date)
     private Date createTime;// 新品
     @Field(type = FieldType.Boolean)
-    private Boolean store; // 是否有货
+    private Boolean store=false; // 是否有货
 
 }

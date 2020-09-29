@@ -12,23 +12,30 @@ import java.util.List;
  */
 @Data
 public class SearchParamVo {
-    private String keyword; // 检索条件
 
-    private List<Long> brandId; // 品牌过滤
+    // 搜索关键字
+    private String keyword;
 
-    private Long cid; // 分类过滤
+    // 接收品牌id的过滤条件
+    private List<Long> brandId;
 
-    // props=5:高通-麒麟,6:骁龙865-硅谷1000
-    private List<String> props; // 过滤的检索参数
+    // 接收分类的过滤条件
+    private List<Long> cid3;
 
-    private Integer sort = 0;// 排序字段：0-默认，得分降序；1-按价格升序；2-按价格降序；3-按创建时间降序；4-按销量降序
+    // 接收规格参数的过滤条件 5:128G-256G-521G
+    private List<String> props;
+
+    // 排序：1-价格升序 2-价格降序 3-新品降序 4-销量降序
+    private Integer sort=0;
 
     // 价格区间
     private Double priceFrom;
     private Double priceTo;
 
-    private Integer pageNum = 1; // 页码
-    private final Integer pageSize = 20; // 每页记录数
+    // 是否有货
+    private Boolean store;
 
-    private Boolean store; // 是否有货
+    // 分页数据
+    private Integer pageNum = 1;
+    private final Integer pageSize = 20;
 }

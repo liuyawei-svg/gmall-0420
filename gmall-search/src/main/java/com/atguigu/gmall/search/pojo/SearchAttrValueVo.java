@@ -5,7 +5,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Data
-public class SearchAttrValue {
+public class SearchAttrValueVo {
     @Field(type = FieldType.Long)
     private Long attrId;
     @Field(type = FieldType.Keyword)
