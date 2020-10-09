@@ -24,4 +24,6 @@ public interface GmallPmsApi {
     public ResponseVo<List<SkuAttrValueEntity>> querySearchSkuAttrValuesByCidAndSkuId(
             @PathVariable("cid")Long cid, @PathVariable("skuId")Long skuId
     );
+    @GetMapping("pms/spu/{id}")
+    public ResponseVo<SpuEntity> querySpuById(@PathVariable("id") Long id);
     }
