@@ -34,6 +34,8 @@ public class SpuAttrValueController {
     @Autowired
     private SpuAttrValueService spuAttrValueService;
 
+
+
     /**
      *搜索模块根据spuId查询检索属性及值
      *

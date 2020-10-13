@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 public interface GmallWmsApi {
+    /*
+    * 根据skuId查询库存信息
+    * */
     @GetMapping("wms/waresku/sku/{skuId}")
     public ResponseVo<List<WareSkuEntity>> queryWareSkuBySkuId(@PathVariable("skuId")Long skuId);
 }
