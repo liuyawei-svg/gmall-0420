@@ -42,4 +42,4 @@ spring:
         - id: item-route
           uri: lb://item-service
           predicates:
-            - Path=/item/**
+            - Host=item.gmall.com
