@@ -34,6 +34,35 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /*
+    * 查询用户
+    * */
+    @GetMapping("query")
+    public ResponseVo<UserEntity> queryUser(@RequestParam("loginName")String loginName, @RequestParam("password")String password){
+
+        UserEntity userEntity = this.userService.queryUser(loginName,password);
+        return ResponseVo.ok(userEntity);
+    }
+
+    /*
+    * 注册功能
+    * */
+
+    @PostMapping("register")
+    public ResponseVo<Object> register(UserEntity userEntity,@RequestParam("code")String code){
+
+        this.userService.register(userEntity,code);
+        return ResponseVo.ok();
+    }
+    /*
+    * 校验用户是否可用
+    * */
+    @GetMapping("check/{data}/{type}")
+    public ResponseVo<Boolean> checkData(@PathVariable("data") String data, @PathVariable("type") Integer type){
+        Boolean b = this.userService.checkData(data,type);
+        return ResponseVo.ok(b);
+    }
+
     /**
      * 列表
      */
