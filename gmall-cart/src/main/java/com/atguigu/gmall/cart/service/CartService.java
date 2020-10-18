@@ -83,7 +83,7 @@ public class CartService {
             ResponseVo<List<SkuAttrValueEntity>> listResponseVo1 = this.pmsClient.querySkuAttrValueBySkuId(cart.getSkuId());
             cart.setSaleAttrs(JSON.toJSONString(listResponseVo1.getData()));
             //新增到mysql
-            this.cartAsyncService.insertCart(cart);
+            this.cartAsyncService.insertCart(userId,cart);
             //添加实时价格缓存到redis
             if(skuEntity != null){
                 this.redisTemplate.opsForValue().set(PRICE_PREFIX + skuIdString, skuEntity.getPrice().toString());
@@ -160,7 +160,7 @@ public class CartService {
                 } else {
                     //新增购物车记录
                     cart.setUserId(userId.toString());
-                    cartAsyncService.insertCart(cart);
+                    cartAsyncService.insertCart(userId.toString(),cart);
                 }
                 loginHashOps.put(cart.getSkuId().toString(), JSON.toJSONString(cart));
             });
