@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 @Data
 @TableName("cart_info")
 public class Cart {
-
     @TableId
     private Long id;
     @TableField("user_id")

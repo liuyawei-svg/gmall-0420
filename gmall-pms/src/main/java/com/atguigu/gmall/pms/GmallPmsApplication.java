@@ -15,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class GmallPmsApplication {
 
     public static void main(String[] args) {
+        System.out.println("hhhhhhhhhhhhhhhhhhhh");
         SpringApplication.run(GmallPmsApplication.class, args);
     }
 

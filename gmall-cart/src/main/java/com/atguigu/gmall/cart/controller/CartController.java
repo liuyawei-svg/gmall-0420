@@ -10,11 +10,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @Controller
 public class CartController {
 
     @Autowired
     private CartService cartService;
+
+    /**
+     * 获取登录用户勾选的购物车
+     * */
+    @GetMapping("checked/{userId}")
+    @ResponseBody
+    public ResponseVo<List<Cart>> queryCheckedCartsByUserId(@PathVariable("userId")Long userId){
+        List<Cart> carts = this.cartService.queryCheckedCartsByUserId(userId);
+        return ResponseVo.ok(carts);
+    }
 
     /**
      * 删除购物车

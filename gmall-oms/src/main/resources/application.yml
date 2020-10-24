@@ -24,6 +24,18 @@ spring:
     password: 123456
   redis:
     host: 192.168.227.128
+  rabbitmq:
+    host: 192.168.227.128
+    virtual-host: /fengge
+    username: fengge
+    password: fengge
+    listener:
+      simple:
+        prefetch: 1
+        concurrency: 3
+        acknowledge-mode: manual
+    publisher-confirm-type: CORRELATED
+    publisher-returns: true
 feign:
   sentinel:
     enabled: true
@@ -33,4 +45,6 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
-
+logging:
+  level:
+    com.atguigu.gmall: debug

@@ -21,7 +21,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://192.168.227.128:3306/guli_cart
     username: root
-    password: 123456
+    password: root
   redis:
     host: 192.168.227.128
   thymeleaf:
@@ -60,4 +60,4 @@ auth:
     pubKeyPath: D:\java\project-0420\rsa\rsa.pub
     cookieName: GMALL-TOKEN
     userKey: user-key
-    expire: 15552000 # userKey的过期时间
+    expire: 15552000
