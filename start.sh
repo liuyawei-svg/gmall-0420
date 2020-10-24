@@ -1,6 +1,5 @@
 # 拉取代码
-git pull
-
+git pull origin master
 
 
 
