@@ -16,6 +16,7 @@ public class GmallPmsApplication {
 
     public static void main(String[] args) {
         System.out.println("hhhhhhhhhhhhhhhhhhhh");
+        System.out.println("hhhhhhhhhhhhhhhhhhhh");
         SpringApplication.run(GmallPmsApplication.class, args);
     }
 
